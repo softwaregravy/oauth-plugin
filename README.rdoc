@@ -59,6 +59,8 @@ Please let me know if this works and I will see if I can make the generator cond
 
 == OAuth Provider generator (Rails 3)
 
+Before you start, be aware that you should have an authentication system already in place (i.e. Authlogic, Devise).  
+
 This currently supports rspec, test_unit, haml, erb, active_record and mongoid:
 
   rails g oauth_provider
@@ -107,6 +109,13 @@ With Authlogic, I used:
   end 
   alias :login_required :require_user
 
+=== Client OAuth Keys
+
+At the time of this writing, the provider generator did not produce the views and controller for managing client oauth keys.  (I'm guessing this is because it's using dynamic_form which was deprecated, and removing the auto-generated functionality was the path of least resistance.)  The output of the provider generator for Rails 2 can be found here:  https://github.com/softwaregravy/oauth_provider/commit/8773cf92e6288f699e9a13fbf771d446e3245abf  I simply copied the auth_clients_controller.rb, the views/oauth_clients to my Rails 3 project and added the following line to my routes.rb file
+
+  resources :oauth_clients
+
+After migrating, you should be able to start up the server and visit http://localhost:3000/oauth_clients  and issue yourself a key.  
 
 == OAuth Provider generator (Rails 2)
 
