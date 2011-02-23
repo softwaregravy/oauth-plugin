@@ -84,6 +84,30 @@ Add the following lines to your user model:
   has_many :client_applications
   has_many :tokens, :class_name=>"OauthToken",:order=>"authorized_at desc",:include=>[:client_application]
 
+=== Application Controller 
+
+There are a set of methods that need to be included as part of your ApplicationController.  Furthermore, you need to make sure you make some methods available that oauth-plugin assumes are there which neither Authlogic nor Devise provide by default.
+
+First, include the methods in your ApplicationController:
+
+  require 'oauth/controllers/application_controller_methods' 
+  class ApplicationController < ActionController::Base
+    include OAuth::Controllers::ApplicationControllerMethods  
+    ...
+
+And then make sure logged_in? and login_required are available.  
+
+With Devise, I used:
+  alias :logged_in? :user_signed_in?
+  alias :login_required :authenticate_user
+
+With Authlogic, I used:
+  def logged_in? 
+    return !current_user.nil? 
+  end 
+  alias :login_required :require_user
+
+
 == OAuth Provider generator (Rails 2)
 
 While it isn't very flexible at the moment there is an oauth_provider generator which you can use like this:
